@@ -1,13 +1,6 @@
 import NewEpisode from "../NewEpisode";
 import TopRank from "../TopRank";
-const MovieCard = ({
-  image,
-  title,
-  rating,
-  isNew,
-  topRank,
-  minWidth = "min-w-[18.5rem] md:min-w-[20.5rem]"
-}) => {
+const MovieCard = ({ image, title, rating, isNew, topRank, minWidth }) => {
   return (
     <div
       className={`${minWidth} rounded-lg overflow-hidden relative brightness-90`}

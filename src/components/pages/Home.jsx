@@ -13,24 +13,28 @@ const Home = () => {
     <>
       <Navbar />
       <HeroSection imageUrl={Herobg} />
-      <MovieSlider movies={movies} mainTitle="Melanjutkan Tonton Film" />
+      <MovieSlider
+        movies={movies}
+        mainTitle="Melanjutkan Tonton Film"
+        minWidth="min-w-[18.5rem] md:min-w-[22rem] lg:min-w-[26rem]"
+      />
       <MovieSlider
         movies={moviesTopRating}
         mainTitle="Top Rating Film"
         showDetails={false}
-        minWidth="min-w-[8.5rem] md:min-w-[18rem]"
+        minWidth="min-w-[8.5rem] md:min-w-[18rem] lg:min-w-[22rem]"
       />
       <MovieSlider
         movies={moviesTrending}
         mainTitle="Trending Film"
         showDetails={false}
-        minWidth="min-w-[8.5rem] md:min-w-[18rem]"
+        minWidth="min-w-[8.5rem] md:min-w-[18rem] lg:min-w-[22rem]"
       />
       <MovieSlider
         movies={LatestReleases}
         mainTitle="Latest Releases"
         showDetails={false}
-        minWidth="min-w-[8.5rem] md:min-w-[18rem]"
+        minWidth="min-w-[8.5rem] md:min-w-[18rem] lg:min-w-[22rem]"
       />
       <Footer />
     </>

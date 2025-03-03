@@ -7,7 +7,7 @@ export default function MovieSlider({
   movies,
   mainTitle,
   showDetails = "true",
-  minWidth = "min-w-[18.5rem] md:min-w-[20.5rem]"
+  minWidth
 }) {
   const sliderRef = useRef(null);
 
