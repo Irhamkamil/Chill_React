@@ -1,0 +1,45 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --color-bg-1: #181a1c;
+  --color-bg-2: rgba(24, 26, 28, 0.84);
+
+  --color-button-1: #192db7;
+  --color-button-2: #2f3334;
+  --color-button-3: #0f1e93;
+  --color-button-4: #b71f1d;
+
+  --color-text-primary: #ffff;
+
+  --font-lato: "Lato", sans-serif;
+  --text-large: 16px;
+  --text-medium: 14px;
+}
+
+@layer utilities {
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    scrollbar-width: none;
+  }
+}
+
+body {
+  @apply font-lato bg-bg-1 text-text-primary;
+}
+
+.transition-dropdown {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.hidden-dropdown {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+.visible-dropdown {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
