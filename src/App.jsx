@@ -5,6 +5,7 @@ import Home from "./components/pages/Home";
 import Login from "./components/pages/Login";
 import Register from "./components/pages/Register";
 import ProtectedRoute from "./components/elements/ProtectedRoute";
+import NotFound from "./components/elements/NotFound";
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route path="/*" element={<NotFound />} />
       </Routes>
     </Router>
   );
