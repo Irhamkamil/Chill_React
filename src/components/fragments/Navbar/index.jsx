@@ -1,14 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { FaUser, FaStar, FaSignOutAlt } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import largeLogo from "/assets/logo.svg";
 import smallLogo from "/assets/movie-small-logo.svg";
 import userLogo from "/assets/user.svg";
 
 const Navbar = () => {
-  const menuItems = ["Series", "Film", "Daftar Saya"];
+  const menuItems = [
+    { name: "Series", path: "/series" },
+    { name: "Film", path: "/film" },
+    { name: "Daftar Saya", path: "/daftar-saya" }
+  ];
   const [isMedium, setIsMedium] = useState(window.innerWidth >= 768);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -49,18 +53,25 @@ const Navbar = () => {
   return (
     <nav className="flex justify-between items-center px-4 md:px-8 py-4 w-full h-15 fixed z-50 bg-bg-1 top-0">
       <div className="flex items-center gap-5 md:gap-12">
-        <img
-          src={isMedium ? largeLogo : smallLogo}
-          alt="Logo"
-          className="w-7 md:w-24"
-        />
+        <Link to="/home">
+          <img
+            src={isMedium ? largeLogo : smallLogo}
+            alt="Logo"
+            className="w-7 md:w-24"
+          />
+        </Link>
         <ul className="flex gap-5 md:gap-8">
           {menuItems.map((item, index) => (
             <li
               key={index}
               className="text-medium md:text-lg font-bold cursor-pointer"
             >
-              {item}
+              <Link
+                to={item.path}
+                className="relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full"
+              >
+                {item.name}
+              </Link>
             </li>
           ))}
         </ul>

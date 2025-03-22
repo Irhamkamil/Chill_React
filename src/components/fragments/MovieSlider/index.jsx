@@ -7,7 +7,9 @@ export default function MovieSlider({
   movies,
   mainTitle,
   showDetails = "true",
-  minWidth
+  minWidth,
+  sizeHover,
+  textGenreSize
 }) {
   const sliderRef = useRef(null);
 
@@ -51,6 +53,8 @@ export default function MovieSlider({
               isNew={movie.isNew}
               topRank={movie.topRank}
               minWidth={minWidth}
+              sizeHover={sizeHover}
+              textGenreSize={textGenreSize}
             />
           ))}
         </div>

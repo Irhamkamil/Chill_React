@@ -17,24 +17,32 @@ const Home = () => {
         movies={movies}
         mainTitle="Melanjutkan Tonton Film"
         minWidth="min-w-[18.5rem] md:min-w-[22rem] lg:min-w-[25rem]"
+        sizeHover="w-full h-1/2"
+        textGenreSize="text-[0.8rem] md:text-sm"
       />
       <MovieSlider
         movies={moviesTopRating}
         mainTitle="Top Rating Film"
-        showDetails={false}
+        // showDetails={false}
         minWidth="min-w-[8.5rem] md:min-w-[18rem] lg:min-w-[21rem]"
+        sizeHover="w-full h-1/3 md:h-1/4"
+        textGenreSize="text-[0.5rem] md:text-sm"
       />
       <MovieSlider
         movies={moviesTrending}
         mainTitle="Trending Film"
-        showDetails={false}
+        // showDetails={false}
         minWidth="min-w-[8.5rem] md:min-w-[18rem] lg:min-w-[21rem]"
+        sizeHover="w-full h-1/3 md:h-1/4"
+        textGenreSize="text-[0.5rem] md:text-sm"
       />
       <MovieSlider
         movies={LatestReleases}
         mainTitle="Latest Releases"
-        showDetails={false}
+        // showDetails={false}
         minWidth="min-w-[8.5rem] md:min-w-[18rem] lg:min-w-[21rem]"
+        sizeHover="w-full h-1/3 md:h-1/4"
+        textGenreSize="text-[0.5rem] md:text-sm"
       />
       <Footer />
     </>

@@ -1,10 +1,67 @@
 import { IoMdArrowDropright } from "react-icons/io";
 import { FaCheck } from "react-icons/fa6";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { RxCross2 } from "react-icons/rx";
+import { useState, useEffect } from "react";
+import { useCallback } from "react";
 
 import NewEpisode from "../NewEpisode";
 import TopRank from "../TopRank";
-const MovieCard = ({ image, title, rating, isNew, topRank, minWidth }) => {
+const MovieCard = ({
+  image,
+  title,
+  rating,
+  isNew,
+  topRank,
+  minWidth,
+  sizeHover,
+  textGenreSize
+}) => {
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  // Fungsi untuk mengecek apakah film ada di favorit
+  const checkFavoriteStatus = useCallback(() => {
+    const savedFavorites =
+      JSON.parse(localStorage.getItem("favoriteMovies")) || [];
+    setIsFavorite(savedFavorites.some((movie) => movie.title === title));
+  }, [title]);
+
+  useEffect(() => {
+    checkFavoriteStatus();
+
+    const handleFavoriteUpdate = () => {
+      checkFavoriteStatus();
+    };
+
+    window.addEventListener("favoriteUpdated", handleFavoriteUpdate);
+    return () => {
+      window.removeEventListener("favoriteUpdated", handleFavoriteUpdate);
+    };
+  }, [checkFavoriteStatus]);
+
+  const toggleFavorite = () => {
+    let savedFavorites =
+      JSON.parse(localStorage.getItem("favoriteMovies")) || [];
+
+    if (isFavorite) {
+      // Hapus semua film dengan title yang sama
+      savedFavorites = savedFavorites.filter((movie) => movie.title !== title);
+      alert(`${title} dihapus dari daftar favorit!`);
+    } else {
+      // Tambahkan hanya jika belum ada di daftar
+      if (!savedFavorites.some((movie) => movie.title === title)) {
+        savedFavorites.push({ title, image, rating, isNew, topRank });
+        alert(`${title} ditambahkan ke daftar favorit!`);
+      }
+    }
+
+    localStorage.setItem("favoriteMovies", JSON.stringify(savedFavorites));
+    setIsFavorite(!isFavorite);
+
+    // Memicu event agar semua MovieCard diperbarui
+    window.dispatchEvent(new Event("favoriteUpdated"));
+  };
+
   return (
     <div
       className={`${minWidth} relative group rounded-lg transition-all duration-300 shadow-md hover:shadow-lg overflow-visible`}
@@ -19,10 +76,11 @@ const MovieCard = ({ image, title, rating, isNew, topRank, minWidth }) => {
         {rating ? `⭐ ${rating}` : ""}
       </div>
 
+      {/* Hover */}
       <div
-        className="absolute bottom-0 left-0 w-full h-1/2 bg-black bg-opacity-80 opacity-0 
+        className={`absolute bottom-0 left-0 ${sizeHover} bg-black bg-opacity-80 opacity-0 
         group-hover:opacity-100 transition-all duration-300 
-        z-10 "
+        z-10 rounded-b-lg`}
       >
         {/* <img
           src={image}
@@ -34,26 +92,28 @@ const MovieCard = ({ image, title, rating, isNew, topRank, minWidth }) => {
             <div className="flex gap-2">
               <button
                 onClick={() => scroll("left")}
-                className="bg-white text-black w-7 h-7 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 hover:bg-gray-300 cursor-pointer"
+                className="bg-white text-black w-5 h-5 md:w-7 md:h-7 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 hover:bg-gray-300 cursor-pointer"
               >
                 <IoMdArrowDropright size={30} />
               </button>
 
               <button
-                onClick={() => scroll("left")}
-                className="bg-transparent text-white w-7 h-7 outline-1 outline-white hover:outline-gray-300 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
+                onClick={toggleFavorite}
+                className="bg-transparent text-white w-5 h-5 md:w-7 md:h-7 outline-1 outline-white hover:outline-gray-300 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
               >
-                <FaCheck size={15} />
+                {isFavorite ? <RxCross2 size={14} /> : <FaCheck size={12} />}
               </button>
             </div>
             <button
               onClick={() => scroll("left")}
-              className="bg-transparent text-white w-7 h-7 outline-1 outline-white hover:outline-gray-300 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
+              className="bg-transparent text-white w-5 h-5 md:w-7 md:h-7 outline-1 outline-white hover:outline-gray-300 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
             >
-              <MdOutlineKeyboardArrowDown size={22} />
+              <MdOutlineKeyboardArrowDown size={20} />
             </button>
           </div>
-          <div className="flex justify-center items-center gap-1 md:gap-5 text-gray-300 text-[0.5rem] md:text-sm">
+          <div
+            className={`flex justify-center items-center gap-1 md:gap-5 text-gray-300 ${textGenreSize}`}
+          >
             <span>Misteri</span>
             <span className="w-1 h-1 md:w-2 md:h-2 bg-gray-400 rounded-full"></span>
             <span>Kriminal</span>
