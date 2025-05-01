@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import InputField from "../elements/InputForm";
+import InputForm from "../elements/InputForm";
 import AuthForm from "../fragments/AuthForm";
 
 const Login = () => {
@@ -50,7 +50,7 @@ const Login = () => {
         onSubmit={handleSubmit}
         sizeCard={"w-[529px] h-[600px]"}
       >
-        <InputField
+        <InputForm
           label="Username"
           type="text"
           name="username"
@@ -59,7 +59,7 @@ const Login = () => {
           onChange={handleChange}
         />
         <div className="mt-4 w-full">
-          <InputField
+          <InputForm
             label="Kata Sandi"
             type="password"
             name="password"

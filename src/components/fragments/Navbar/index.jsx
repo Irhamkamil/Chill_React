@@ -93,10 +93,13 @@ const Navbar = () => {
             isDropdownOpen ? "visible-dropdown" : "hidden-dropdown"
           }`}
         >
-          <div className="px-4 py-2 flex items-center gap-2 cursor-pointer hover:bg-gray-700">
+          <Link
+            to="/profile"
+            className="px-4 py-2 flex items-center gap-2 cursor-pointer hover:bg-gray-700"
+          >
             <FaUser className="text-blue-500" />
             <span>Profil Saya</span>
-          </div>
+          </Link>
           <div className="px-4 py-2 flex items-center gap-2 cursor-pointer hover:bg-gray-700">
             <FaStar className="text-yellow-500" />
             <span>Ubah Premium</span>

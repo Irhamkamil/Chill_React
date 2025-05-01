@@ -7,6 +7,7 @@ import AuthForm from "../fragments/AuthForm";
 const Register = () => {
   const [formData, setFormData] = useState({
     username: "",
+    email: "",
     password: "",
     confirmPassword: ""
   });
@@ -28,6 +29,7 @@ const Register = () => {
     // Simpan ke localStorage
     const userData = {
       username: formData.username,
+      email: formData.email,
       password: formData.password
     };
     localStorage.setItem("user", JSON.stringify(userData));
@@ -49,7 +51,7 @@ const Register = () => {
         redirectBtn="Login"
         redirectLink="/login"
         onSubmit={handleSubmit}
-        sizeCard={"w-[529px] h-[710px]"}
+        sizeCard={"w-[529px] h-[790px]"}
       >
         <InputField
           label="Username"
@@ -59,6 +61,16 @@ const Register = () => {
           value={formData.username}
           onChange={handleChange}
         />
+        <div className="mt-6 w-full">
+          <InputField
+            label="Email"
+            type="email"
+            name="email"
+            placeholder="Masukkan Email"
+            value={formData.email}
+            onChange={handleChange}
+          />
+        </div>
         <div className="mt-6 w-full">
           <InputField
             label="Kata Sandi"
