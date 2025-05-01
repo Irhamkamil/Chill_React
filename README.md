@@ -5,4 +5,4 @@
 # Daftar
 ![image](https://github.com/user-attachments/assets/690f43d6-f672-4edc-b52f-51112e0dc8fa)
 
-# Dan coba login ulang menggunakan username dan password yang tadi didaftarkan
+Dan coba login ulang menggunakan username dan password yang tadi didaftarkan
