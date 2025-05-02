@@ -1,23 +1,66 @@
+import { useState, useEffect } from "react";
+
 import InputForm from "../elements/InputForm";
 import Navbar from "../fragments/Navbar";
 import Footer from "../fragments/Footer";
 
 const Profile = () => {
+  const [userData, setUserData] = useState({
+    username: "",
+    email: "",
+    password: ""
+  });
+
+  const [showModal, setShowModal] = useState(false);
+  const [emailError, setEmailError] = useState("");
+
+  // Ambil data dari localStorage saat pertama kali komponen dirender
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUserData(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const handleChange = (e) => {
+    setUserData({ ...userData, [e.target.name]: e.target.value });
+  };
+
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!validateEmail(userData.email)) {
+      setEmailError("Email tidak valid");
+      return;
+    }
+    setEmailError("");
+    setShowModal(true); // tampilkan modal konfirmasi
+  };
+
+  const handleConfirmSave = () => {
+    localStorage.setItem("user", JSON.stringify(userData));
+    setShowModal(false);
+  };
+
   return (
     <>
       <Navbar />
 
       <div className="w-full h-full flex flex-col sm:flex-row md:gap-5">
         <div className="order-1 sm:order-2 w-full px-4 mb-5 mt-20">
-          <div className="bg-gray-700 text-white rounded-2xl p-6 flex gap-4 shadow-lg">
-            <div className="flex items-start gap-2">
+          <div className="w-full bg-gray-700 text-white rounded-2xl p-6 flex gap-4 shadow-lg">
+            <div className="flex items-start">
               <img
                 src="/assets/warning.svg"
                 alt="subscribe"
-                className="min-w-20 h-25"
+                className="w-20 h-25 object-contain"
               />
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 flex-1">
               <h2 className="text-lg font-semibold">
                 Saat Ini Anda Belum Berlangganan
               </h2>
@@ -26,7 +69,7 @@ const Profile = () => {
                 Kamu!
               </p>
               <div className="flex justify-end">
-                <button className="bg-gray-800 text-white text-sm font-medium py-2 px-4 mt-2 rounded-full hover:bg-gray-900 transition">
+                <button className="bg-gray-800 text-white text-sm font-semibold py-3 px-5 mt-2 rounded-full hover:bg-gray-900 transition">
                   Mulai Berlangganan
                 </button>
               </div>
@@ -36,7 +79,7 @@ const Profile = () => {
 
         <form
           className="order-2 sm:order-1 w-full flex flex-col gap-4 px-4 py-2 mb-10 mt-17"
-          // onSubmit={}
+          onSubmit={handleSubmit}
         >
           <h1 className="text-xl font-bold">Profil Saya</h1>
 
@@ -64,24 +107,25 @@ const Profile = () => {
             type="text"
             name="username"
             placeholder="Masukkan username"
-            // value={loginData.username}
-            // onChange={handleChange}
+            value={userData.username}
+            onChange={handleChange}
           />
           <InputForm
             label="Email"
             type="email"
             name="email"
             placeholder="Masukkan Email"
-            // value={loginData.username}
-            // onChange={handleChange}
+            value={userData.email}
+            onChange={handleChange}
+            errorMessage={emailError}
           />
           <InputForm
             label="Password"
             type="password"
             name="password"
             placeholder="Masukkan Password"
-            // value={loginData.username}
-            // onChange={handleChange}
+            value={userData.password}
+            onChange={handleChange}
           />
           {/* Submit Button */}
           <div className="mt-4 flex items-center justify-start">
@@ -93,6 +137,30 @@ const Profile = () => {
             </button>
           </div>
         </form>
+        {/* Modal konfirmasi */}
+        {showModal && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50 transition-opacity duration-300 ease-out">
+            <div className="bg-white rounded-xl p-6 text-center shadow-lg transform transition-all duration-300 ease-out scale-95 animate-fade-in">
+              <h2 className="text-lg text-black font-semibold mb-4">
+                Apakah data sudah sesuai?
+              </h2>
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={handleConfirmSave}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-800 transition"
+                >
+                  Iya
+                </button>
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded-full hover:bg-gray-400 transition"
+                >
+                  Tidak
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <Footer />
