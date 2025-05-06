@@ -41,7 +41,7 @@ const MyList = () => {
           mainTitle="Daftar Saya"
           // showDetails={false}
           sizeHover="w-full h-1/4 md:h-1/4"
-          textGenreSize="text-[0.8rem] sm:text-[0.7rem] md:text-[0.65rem] lg:text-[0.6rem]"
+          textGenreSize="text-[0.8rem] sm:text-[0.7rem] md:text-[0.65rem] lg:text-[0.8rem]"
         />
       )}
       <Footer />
