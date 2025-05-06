@@ -49,10 +49,9 @@ const MovieCard = ({
       alert(`${title} dihapus dari daftar favorit!`);
     } else {
       // Tambahkan hanya jika belum ada di daftar
-      if (!savedFavorites.some((movie) => movie.title === title)) {
-        savedFavorites.push({ title, image, rating, isNew, topRank });
-        alert(`${title} ditambahkan ke daftar favorit!`);
-      }
+
+      savedFavorites.push({ title, image, rating, isNew, topRank });
+      alert(`${title} ditambahkan ke daftar favorit!`);
     }
 
     localStorage.setItem("favoriteMovies", JSON.stringify(savedFavorites));
@@ -69,10 +68,10 @@ const MovieCard = ({
       <img src={image} alt={title} className="w-full h-full object-cover" />
       {isNew && <NewEpisode />}
       {topRank && <TopRank />}
-      <div className="absolute bottom-2 left-2 bg-transparent bg-opacity-50 px-2 w-full text-white font-semibold">
+      <div className="absolute bottom-2 left-2 right-2 bg-black/70 px-3 py-1 rounded-lg text-white font-semibold text-sm w-fit max-w-full truncate">
         {title}
       </div>
-      <div className="absolute bottom-2 right-2 text-white bg-transparent bg-opacity-50 px-2 py-1 rounded-md text-sm">
+      <div className="absolute bottom-2 right-2 bg-black/70 px-3 py-1 rounded-lg text-white font-semibold text-sm w-fit max-w-full truncate">
         {rating ? `⭐ ${rating}` : ""}
       </div>
 
@@ -90,10 +89,7 @@ const MovieCard = ({
         <div className=" flex flex-col justify-center gap-3 px-4 text-white">
           <div className="flex justify-between mt-4">
             <div className="flex gap-2">
-              <button
-                onClick={() => scroll("left")}
-                className="bg-white text-black w-5 h-5 md:w-7 md:h-7 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 hover:bg-gray-300 cursor-pointer"
-              >
+              <button className="bg-white text-black w-5 h-5 md:w-7 md:h-7 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 hover:bg-gray-300 cursor-pointer">
                 <IoMdArrowDropright size={30} />
               </button>
 
@@ -104,10 +100,7 @@ const MovieCard = ({
                 {isFavorite ? <RxCross2 size={14} /> : <FaCheck size={12} />}
               </button>
             </div>
-            <button
-              onClick={() => scroll("left")}
-              className="bg-transparent text-white w-5 h-5 md:w-7 md:h-7 outline-1 outline-white hover:outline-gray-300 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
-            >
+            <button className="bg-transparent text-white w-5 h-5 md:w-7 md:h-7 outline-1 outline-white hover:outline-gray-300 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer">
               <MdOutlineKeyboardArrowDown size={20} />
             </button>
           </div>
