@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import InputForm from "../elements/InputForm";
 import Navbar from "../fragments/Navbar";
 import Footer from "../fragments/Footer";
+import { updateUser, deleteUserById } from "../../services/API/userAPI";
 
 const Profile = () => {
   const [userData, setUserData] = useState({
@@ -45,13 +45,8 @@ const Profile = () => {
   const handleConfirmSave = async () => {
     try {
       const { id, ...dataToUpdate } = userData;
-      const response = await axios.put(
-        `https://68147574225ff1af1628e622.mockapi.io/users/${id}`,
-        dataToUpdate
-      );
-
-      // Update data yang baru di localStorage
-      localStorage.setItem("currentUser", JSON.stringify(response.data));
+      const updatedUser = await updateUser(id, dataToUpdate); // 🔹 Gunakan userAPI
+      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
       alert("Data berhasil diperbarui!");
     } catch (error) {
       console.error("Gagal update data:", error);
@@ -67,9 +62,7 @@ const Profile = () => {
 
   const confirmDeleteAccount = async () => {
     try {
-      await axios.delete(
-        `https://68147574225ff1af1628e622.mockapi.io/users/${userData.id}`
-      );
+      await deleteUserById(userData.id);
       localStorage.removeItem("currentUser");
       alert("Akun berhasil dihapus.");
       window.location.href = "/registerAPi";
