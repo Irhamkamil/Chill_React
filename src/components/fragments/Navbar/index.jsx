@@ -11,7 +11,7 @@ const Navbar = () => {
   const menuItems = [
     { name: "Series", path: "/series" },
     { name: "Film", path: "/film" },
-    { name: "Daftar Saya", path: "/daftar-saya" }
+    { name: "Daftar Saya", path: "/mylist" }
   ];
   const [isMedium, setIsMedium] = useState(window.innerWidth >= 768);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

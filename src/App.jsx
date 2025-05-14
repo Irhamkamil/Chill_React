@@ -23,7 +23,7 @@ function App() {
         <Route path="/registerAPI" element={<RegisterAPI />} />
 
         <Route
-          path="/daftar-saya"
+          path="/mylist"
           element={
             <ProtectedRoute>
               <MyList />

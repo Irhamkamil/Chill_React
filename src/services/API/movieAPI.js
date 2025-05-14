@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://68147574225ff1af1628e622.mockapi.io";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const getAllMovies = async () => {
   try {

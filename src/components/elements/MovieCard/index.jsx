@@ -2,8 +2,9 @@ import { IoMdArrowDropright } from "react-icons/io";
 import { FaCheck } from "react-icons/fa6";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
-import { useState, useEffect } from "react";
-import { useCallback } from "react";
+// import { useState, useEffect } from "react";
+// import { useCallback } from "react";
+import useFavoriteStore from "../../../services/store/favoriteStore";
 
 import NewEpisode from "../NewEpisode";
 import TopRank from "../TopRank";
@@ -17,48 +18,63 @@ const MovieCard = ({
   sizeHover,
   textGenreSize
 }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
+  // BELUM MENGGUNAKAN STATE MANAGEMENT //
+  // const [isFavorite, setIsFavorite] = useState(false);
 
-  // Fungsi untuk mengecek apakah film ada di favorit
-  const checkFavoriteStatus = useCallback(() => {
-    const savedFavorites =
-      JSON.parse(localStorage.getItem("favoriteMovies")) || [];
-    setIsFavorite(savedFavorites.some((movie) => movie.title === title));
-  }, [title]);
+  // // Fungsi untuk mengecek apakah film ada di favorit
+  // const checkFavoriteStatus = useCallback(() => {
+  //   const savedFavorites =
+  //     JSON.parse(localStorage.getItem("favoriteMovies")) || [];
+  //   setIsFavorite(savedFavorites.some((movie) => movie.title === title));
+  // }, [title]);
 
-  useEffect(() => {
-    checkFavoriteStatus();
+  // useEffect(() => {
+  //   checkFavoriteStatus();
 
-    const handleFavoriteUpdate = () => {
-      checkFavoriteStatus();
-    };
+  //   const handleFavoriteUpdate = () => {
+  //     checkFavoriteStatus();
+  //   };
 
-    window.addEventListener("favoriteUpdated", handleFavoriteUpdate);
-    return () => {
-      window.removeEventListener("favoriteUpdated", handleFavoriteUpdate);
-    };
-  }, [checkFavoriteStatus]);
+  //   window.addEventListener("favoriteUpdated", handleFavoriteUpdate);
+  //   return () => {
+  //     window.removeEventListener("favoriteUpdated", handleFavoriteUpdate);
+  //   };
+  // }, [checkFavoriteStatus]);
+
+  // const toggleFavorite = () => {
+  //   let savedFavorites =
+  //     JSON.parse(localStorage.getItem("favoriteMovies")) || [];
+
+  //   if (isFavorite) {
+  //     // Hapus semua film dengan title yang sama
+  //     savedFavorites = savedFavorites.filter((movie) => movie.title !== title);
+  //     alert(`${title} dihapus dari daftar favorit!`);
+  //   } else {
+  //     // Tambahkan hanya jika belum ada di daftar
+
+  //     savedFavorites.push({ title, image, rating, isNew, topRank });
+  //     alert(`${title} ditambahkan ke daftar favorit!`);
+  //   }
+
+  //   localStorage.setItem("favoriteMovies", JSON.stringify(savedFavorites));
+  //   setIsFavorite(!isFavorite);
+
+  //   // Memicu event agar semua MovieCard diperbarui
+  //   window.dispatchEvent(new Event("favoriteUpdated"));
+  // };
+
+  // MENGGUNAKAN STATE MANAGEMENT //
+  const { addFavorite, removeFavorite, isFavorite } = useFavoriteStore();
+  const isFav = isFavorite(title);
 
   const toggleFavorite = () => {
-    let savedFavorites =
-      JSON.parse(localStorage.getItem("favoriteMovies")) || [];
-
-    if (isFavorite) {
-      // Hapus semua film dengan title yang sama
-      savedFavorites = savedFavorites.filter((movie) => movie.title !== title);
+    if (isFav) {
+      removeFavorite(title);
       alert(`${title} dihapus dari daftar favorit!`);
     } else {
-      // Tambahkan hanya jika belum ada di daftar
-
-      savedFavorites.push({ title, image, rating, isNew, topRank });
+      addFavorite({ title, image, rating, isNew, topRank });
       alert(`${title} ditambahkan ke daftar favorit!`);
     }
-
-    localStorage.setItem("favoriteMovies", JSON.stringify(savedFavorites));
-    setIsFavorite(!isFavorite);
-
-    // Memicu event agar semua MovieCard diperbarui
-    window.dispatchEvent(new Event("favoriteUpdated"));
   };
 
   return (
@@ -97,7 +113,7 @@ const MovieCard = ({
                 onClick={toggleFavorite}
                 className="bg-transparent text-white w-5 h-5 md:w-7 md:h-7 outline-1 outline-white hover:outline-gray-300 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
               >
-                {isFavorite ? <RxCross2 size={14} /> : <FaCheck size={12} />}
+                {isFav ? <RxCross2 size={14} /> : <FaCheck size={12} />}
               </button>
             </div>
             <button className="bg-transparent text-white w-5 h-5 md:w-7 md:h-7 outline-1 outline-white hover:outline-gray-300 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer">
