@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Navbar from "../fragments/Navbar";
@@ -7,10 +7,13 @@ import MovieSlider from "../fragments/MovieSlider";
 import Footer from "../fragments/Footer";
 
 import Herobg from "/assets/gambar_kesamping/gambar_duty-school.svg";
-import { movies } from "../../data/movies";
+import { getAllMovies } from "../../services/API/movieAPI";
+// import { movies } from "../../data/movies";
 const Home = () => {
   const navigate = useNavigate();
   // const [username, setUsername] = useState("");
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Fungsi untuk memverifikasi simulasi token JWT
   const verifyJwtToken = (token, secretKey) => {
@@ -43,28 +46,58 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const secretKey = "rahasia_kunci_simulasi_belajar_jwt"; // Harus sama dengan yang digunakan di Login
+  const checkLoginStatus = useCallback(() => {
+    try {
+      const token = localStorage.getItem("token");
+      const currentUser = localStorage.getItem("currentUser");
 
-    if (!token) {
-      alert("Anda belum login. Silakan login terlebih dahulu.");
-      navigate("/login");
+      // Jika token atau currentUser tidak ada
+      if (!token || !currentUser) {
+        console.log("Token tidak ada atau data user tidak ada");
+        throw new Error("Token tidak valid atau sudah kadaluarsa");
+      }
+
+      // Verifikasi token dengan secret key yang sama
+      const secretKey = "secretkey";
+      const decoded = verifyJwtToken(token, secretKey);
+      console.log("Payload token:", decoded.username);
+
+      // Jika verifikasi berhasil, kembalikan true
+      return true;
+    } catch (error) {
+      console.error("Error verifikasi:", error.message);
+      // Hapus token tidak valid dan redirect ke login
+      localStorage.removeItem("token");
+      localStorage.removeItem("currentUser");
+      return false;
+    }
+  }, []);
+
+  // Ambil data dari API
+  const fetchMovies = useCallback(async () => {
+    try {
+      const data = await getAllMovies();
+      setMovies(data);
+    } catch (err) {
+      console.error("Gagal mengambil data movie:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Periksa status login ketika komponen dimuat
+    const isLoggedIn = checkLoginStatus();
+
+    if (!isLoggedIn) {
+      alert("Anda belum login, silahkan login terlebih dahulu");
+      navigate("/loginAPI");
       return;
     }
 
-    try {
-      // Verifikasi token dan dapatkan data pengguna
-      const decoded = verifyJwtToken(token, secretKey);
-      // setUsername(decoded.username);
-      console.log("Selamat datang:", decoded.username);
-    } catch (err) {
-      console.error("Token tidak valid atau sudah kadaluarsa:", err.message);
-      alert("Sesi Anda telah berakhir. Silakan login kembali.");
-      localStorage.removeItem("token");
-      navigate("/login");
-    }
-  }, [navigate]);
+    // Ambil data film jika sudah login
+    fetchMovies();
+  }, [navigate, checkLoginStatus, fetchMovies]);
 
   const continueWatch = movies.filter((movie) =>
     movie.category?.includes("continue")
@@ -74,6 +107,10 @@ const Home = () => {
     movie.category?.includes("trending")
   );
   const latest = movies.filter((movie) => movie.category?.includes("latest"));
+
+  if (loading) {
+    return <p className="text-center mt-32">Loading data film...</p>;
+  }
 
   return (
     <>

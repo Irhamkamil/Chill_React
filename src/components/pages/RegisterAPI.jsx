@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import InputField from "../elements/InputForm";
 import AuthForm from "../fragments/AuthForm";
+import { getAllUsers, registerUser } from "../../services/API/userAPI";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -15,45 +15,37 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (formData.password !== formData.confirmPassword) {
-      alert("Kata sandi dan konfirmasi kata sandi tidak cocok!");
+      alert("Password tidak cocok!");
       return;
     }
 
-    // Simpan ke LocalStorage
-    const userData = {
-      username: formData.username,
-      email: formData.email,
-      password: formData.password
-    };
+    try {
+      const existingUsers = await getAllUsers();
+      const isUsernameTaken = existingUsers.some(
+        (user) => user.username === formData.username
+      );
+      if (isUsernameTaken) {
+        alert("Username sudah digunakan!");
+        return;
+      }
 
-    // Ambil data pengguna lama dari localStorage (jika ada)
-    const existingUsers = JSON.parse(localStorage.getItem("user")) || [];
+      await registerUser({
+        username: formData.username,
+        email: formData.email,
+        password: formData.password
+      });
 
-    // Cek apakah username sudah digunakan
-    const isUsernameTaken = existingUsers.some(
-      (user) => user.username === userData.username
-    );
-
-    if (isUsernameTaken) {
-      alert("Username sudah digunakan! Silahkan pilih username lain.");
-      return;
+      alert("Pendaftaran berhasil!");
+      navigate("/loginAPI");
+    } catch (error) {
+      alert("Gagal mendaftar: " + error.message);
     }
-
-    // Tambahkan pengguna baru ke array
-    const updatedUsers = [...existingUsers, userData];
-
-    // Simpan kembali ke LocalStorage dengan key "users" - PERUBAHAN DI SINI!
-    localStorage.setItem("user", JSON.stringify(updatedUsers));
-
-    alert("Pendaftaran berhasil! Silahkan masuk.");
-    navigate("/login"); // Redirect ke halaman login setelah register
   };
 
   return (
@@ -67,7 +59,7 @@ const Register = () => {
         submitText="Daftar"
         redirectText="Sudah punya akun?"
         redirectBtn="Login"
-        redirectLink="/login"
+        redirectLink="/loginAPI"
         onSubmit={handleSubmit}
         sizeCard={"w-[529px] h-[790px]"}
       >
@@ -75,7 +67,6 @@ const Register = () => {
           label="Username"
           type="text"
           name="username"
-          placeholder="Masukkan username"
           value={formData.username}
           onChange={handleChange}
         />
@@ -84,7 +75,6 @@ const Register = () => {
             label="Email"
             type="email"
             name="email"
-            placeholder="Masukkan Email"
             value={formData.email}
             onChange={handleChange}
           />
@@ -94,7 +84,6 @@ const Register = () => {
             label="Kata Sandi"
             type="password"
             name="password"
-            placeholder="Masukkan kata sandi"
             value={formData.password}
             onChange={handleChange}
           />
@@ -104,7 +93,6 @@ const Register = () => {
             label="Konfirmasi Kata Sandi"
             type="password"
             name="confirmPassword"
-            placeholder="Masukkan ulang kata sandi"
             value={formData.confirmPassword}
             onChange={handleChange}
           />

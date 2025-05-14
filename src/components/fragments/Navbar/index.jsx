@@ -20,7 +20,8 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/login");
+    localStorage.removeItem("currentUser");
+    navigate("/loginAPI");
   };
 
   // Handle resize event
@@ -94,7 +95,7 @@ const Navbar = () => {
           }`}
         >
           <Link
-            to="/profile"
+            to="/profileAPI"
             className="px-4 py-2 flex items-center gap-2 cursor-pointer hover:bg-gray-700"
           >
             <FaUser className="text-blue-500" />

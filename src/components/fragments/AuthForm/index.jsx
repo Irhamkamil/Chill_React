@@ -50,14 +50,14 @@ const AuthForm = ({
         <div className="mt-6 w-full flex flex-col items-center">
           <button
             type="submit"
-            className="w-full bg-red-600 text-white py-3 rounded-full font-semibold hover:bg-red-700"
+            className="w-full bg-red-600 text-white py-3 rounded-full font-semibold hover:bg-red-700 cursor-pointer"
           >
             {submitText}
           </button>
           <span className="text-gray-400 my-3">Atau</span>
           <button
             type="button"
-            className="w-full flex justify-center items-center gap-2 border border-gray-500 text-white py-3 rounded-full hover:bg-gray-700"
+            className="w-full flex justify-center items-center gap-2 border border-gray-500 text-white py-3 rounded-full hover:bg-gray-700 cursor-pointer"
           >
             <img
               src="/assets/google-logo.svg"

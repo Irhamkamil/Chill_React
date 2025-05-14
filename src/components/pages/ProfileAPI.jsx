@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import axios from "axios";
 import InputForm from "../elements/InputForm";
 import Navbar from "../fragments/Navbar";
 import Footer from "../fragments/Footer";
@@ -8,17 +8,18 @@ const Profile = () => {
   const [userData, setUserData] = useState({
     username: "",
     email: "",
-    password: ""
+    password: "",
+    id: ""
   });
 
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [emailError, setEmailError] = useState("");
 
-  // Ambil data dari localStorage saat pertama kali komponen dirender
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = JSON.parse(localStorage.getItem("currentUser"));
     if (storedUser) {
-      setUserData(JSON.parse(storedUser));
+      setUserData(storedUser);
     }
   }, []);
 
@@ -38,12 +39,46 @@ const Profile = () => {
       return;
     }
     setEmailError("");
-    setShowModal(true); // tampilkan modal konfirmasi
+    setShowModal(true);
   };
 
-  const handleConfirmSave = () => {
-    localStorage.setItem("user", JSON.stringify(userData));
-    setShowModal(false);
+  const handleConfirmSave = async () => {
+    try {
+      const { id, ...dataToUpdate } = userData;
+      const response = await axios.put(
+        `https://68147574225ff1af1628e622.mockapi.io/users/${id}`,
+        dataToUpdate
+      );
+
+      // Update data yang baru di localStorage
+      localStorage.setItem("currentUser", JSON.stringify(response.data));
+      alert("Data berhasil diperbarui!");
+    } catch (error) {
+      console.error("Gagal update data:", error);
+      alert("Terjadi kesalahan saat mengupdate data.");
+    } finally {
+      setShowModal(false);
+    }
+  };
+
+  const handleDeleteAccount = () => {
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeleteAccount = async () => {
+    try {
+      await axios.delete(
+        `https://68147574225ff1af1628e622.mockapi.io/users/${userData.id}`
+      );
+      localStorage.removeItem("currentUser");
+      alert("Akun berhasil dihapus.");
+      window.location.href = "/registerAPi";
+    } catch (error) {
+      console.error("Gagal menghapus akun:", error);
+      alert("Terjadi kesalahan saat menghapus akun.");
+    } finally {
+      setShowDeleteModal(false);
+    }
   };
 
   return (
@@ -127,20 +162,28 @@ const Profile = () => {
             value={userData.password}
             onChange={handleChange}
           />
-          {/* Submit Button */}
-          <div className="mt-4 flex items-center justify-start">
+
+          <div className="mt-4 gap-5 flex items-center justify-start">
             <button
               type="submit"
-              className="w-full md:w-auto bg-blue-800 text-white py-2 px-7 rounded-full font-semibold hover:bg-blue-600 transition-all"
+              className="w-full md:w-auto bg-blue-800 text-white py-2 px-7 text-sm md:text-base rounded-full font-semibold hover:bg-blue-600 transition-all"
             >
               Edit
             </button>
+
+            <button
+              onClick={handleDeleteAccount}
+              type="button"
+              className="w-full md:w-auto mt-1 bg-red-600 text-white py-2 px-7 text-sm md:text-base rounded-full font-semibold hover:bg-red-800 transition-all"
+            >
+              Hapus Akun
+            </button>
           </div>
         </form>
-        {/* Modal konfirmasi Update*/}
+
         {showModal && (
           <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50 transition-opacity duration-300 ease-out">
-            <div className="bg-white rounded-xl p-6 text-center shadow-lg transform transition-all duration-300 ease-out scale-95 animate-fade-in">
+            <div className="bg-white rounded-xl p-6 text-center shadow-lg">
               <h2 className="text-lg text-black font-semibold mb-4">
                 Apakah data sudah sesuai?
               </h2>
@@ -156,6 +199,34 @@ const Profile = () => {
                   className="bg-gray-300 text-gray-800 px-4 py-2 rounded-full hover:bg-gray-400 transition"
                 >
                   Tidak
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showDeleteModal && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50 transition-opacity duration-300 ease-out">
+            <div className="bg-white rounded-xl p-6 text-center shadow-lg">
+              <h2 className="text-lg text-black font-semibold mb-4">
+                Apakah kamu yakin ingin menghapus akun ini?
+              </h2>
+              <p className="text-sm text-gray-700 mb-4">
+                Tindakan ini tidak dapat dibatalkan dan akan menghapus semua
+                data akun kamu.
+              </p>
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={confirmDeleteAccount}
+                  className="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-800 transition"
+                >
+                  Hapus
+                </button>
+                <button
+                  onClick={() => setShowDeleteModal(false)}
+                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded-full hover:bg-gray-400 transition"
+                >
+                  Batal
                 </button>
               </div>
             </div>
