@@ -60,6 +60,8 @@ export default function MovieSlider({
               <MovieCard
                 key={index}
                 image={image}
+                imageVer={movie.imageVer}
+                imageHor={movie.imageHor}
                 title={showDetails ? movie.title : undefined}
                 rating={showDetails ? movie.rating : undefined}
                 isNew={movie.isNew}

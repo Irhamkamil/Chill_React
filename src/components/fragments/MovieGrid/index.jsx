@@ -13,8 +13,11 @@ const MovieGrid = ({
       {mainTitle && <h1 className="text-2xl font-bold mb-4">{mainTitle}</h1>}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {movies.map((movie) => {
+          const image = movie.imageVer || movie.imageHor;
           const props = {
-            image: movie.image,
+            image,
+            imageVer: movie.imageVer,
+            imageHor: movie.imageHor,
             isNew: movie.isNew,
             topRank: movie.topRank,
             minWidth,

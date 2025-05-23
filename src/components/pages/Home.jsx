@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Navbar from "../fragments/Navbar";
@@ -7,13 +7,12 @@ import MovieSlider from "../fragments/MovieSlider";
 import Footer from "../fragments/Footer";
 
 import Herobg from "/assets/gambar_kesamping/gambar_duty-school.svg";
-import { getAllMovies } from "../../services/API/movieAPI";
+import useMovieStore from "../../services/store/movieStore";
 // import { movies } from "../../data/movies";
 const Home = () => {
   const navigate = useNavigate();
   // const [username, setUsername] = useState("");
-  const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { movies, isLoading, fetchMovies } = useMovieStore();
 
   // Fungsi untuk memverifikasi simulasi token JWT
   const verifyJwtToken = (token, secretKey) => {
@@ -74,30 +73,15 @@ const Home = () => {
   }, []);
 
   // Ambil data dari API
-  const fetchMovies = useCallback(async () => {
-    try {
-      const data = await getAllMovies();
-      setMovies(data);
-    } catch (err) {
-      console.error("Gagal mengambil data movie:", err);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
-    // Periksa status login ketika komponen dimuat
     const isLoggedIn = checkLoginStatus();
-
     if (!isLoggedIn) {
       alert("Anda belum login, silahkan login terlebih dahulu");
       navigate("/loginAPI");
       return;
     }
-
-    // Ambil data film jika sudah login
     fetchMovies();
-  }, [navigate, checkLoginStatus, fetchMovies]);
+  }, [navigate, fetchMovies, checkLoginStatus]);
 
   const continueWatch = movies.filter((movie) =>
     movie.category?.includes("continue")
@@ -108,7 +92,7 @@ const Home = () => {
   );
   const latest = movies.filter((movie) => movie.category?.includes("latest"));
 
-  if (loading) {
+  if (isLoading) {
     return <p className="text-center mt-32">Loading data film...</p>;
   }
 

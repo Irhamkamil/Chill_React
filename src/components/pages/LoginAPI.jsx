@@ -46,6 +46,9 @@ const Login = () => {
       localStorage.setItem("token", token);
       localStorage.setItem("currentUser", JSON.stringify(matchedUser));
 
+      const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+      localStorage.setItem("currentUserId", currentUser.id);
+
       alert("Login berhasil!");
       navigate("/home");
     } catch (error) {

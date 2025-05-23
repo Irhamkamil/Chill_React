@@ -4,12 +4,14 @@ import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
 // import { useState, useEffect } from "react";
 // import { useCallback } from "react";
-import useFavoriteStore from "../../../services/store/favoriteStore";
+import useFavoriteMovies from "../../../services/store/favoriteStore";
 
 import NewEpisode from "../NewEpisode";
 import TopRank from "../TopRank";
 const MovieCard = ({
   image,
+  imageVer,
+  imageHor,
   title,
   rating,
   isNew,
@@ -64,15 +66,31 @@ const MovieCard = ({
   // };
 
   // MENGGUNAKAN STATE MANAGEMENT //
-  const { addFavorite, removeFavorite, isFavorite } = useFavoriteStore();
-  const isFav = isFavorite(title);
+  const { favorites, addFavorite, removeFavorite } = useFavoriteMovies();
 
-  const toggleFavorite = () => {
+  const isFav = favorites.some((movie) => movie.title === title);
+
+  const userId = localStorage.getItem("currentUserId");
+
+  const toggleFavorite = async () => {
+    const selectedImage = imageVer || imageHor;
+
     if (isFav) {
-      removeFavorite(title);
+      const movieToRemove = favorites.find((movie) => movie.title === title);
+      await removeFavorite(movieToRemove.id);
       alert(`${title} dihapus dari daftar favorit!`);
     } else {
-      addFavorite({ title, image, rating, isNew, topRank });
+      await addFavorite({
+        title,
+        image: selectedImage,
+        imageVer,
+        imageHor,
+        rating,
+        isNew,
+        topRank,
+        category: [],
+        userId
+      });
       alert(`${title} ditambahkan ke daftar favorit!`);
     }
   };

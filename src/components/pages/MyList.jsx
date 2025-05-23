@@ -1,4 +1,4 @@
-// import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import useFavoriteStore from "../../services/store/favoriteStore";
 
 import Navbar from "../fragments/Navbar";
@@ -32,7 +32,23 @@ const MyList = () => {
   // }, []);
 
   // MENGGUNAKAN STATE MANAGEMENT //
-  const { favorites: favoriteMovies } = useFavoriteStore();
+  const {
+    favorites: favoriteMovies,
+    fetchFavorites,
+    isLoading
+  } = useFavoriteStore();
+
+  useEffect(() => {
+    const userId = localStorage.getItem("currentUserId");
+    console.log("userId di MyList:", userId);
+    if (userId) {
+      fetchFavorites();
+    }
+  }, [fetchFavorites]);
+
+  if (isLoading) {
+    return <p className="text-center mt-32">Loading data film...</p>;
+  }
 
   return (
     <>
@@ -45,7 +61,7 @@ const MyList = () => {
           <h2 className="text-2xl font-bold">Daftar Saya</h2>
           <MovieGrid
             movies={favoriteMovies}
-            mainTitle="" // bisa kosong, biar nggak nambah judul
+            mainTitle=""
             minWidth="min-w-[8.5rem] md:min-w-[13rem] lg:min-w-[14rem]"
             sizeHover="w-full h-1/4 md:h-1/4"
             textGenreSize="text-[0.8rem] sm:text-[0.7rem] md:text-[0.65rem] lg:text-[0.8rem]"

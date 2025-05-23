@@ -21,6 +21,7 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("currentUser");
+    localStorage.removeItem("currentUserId");
     navigate("/loginAPI");
   };
 
@@ -107,7 +108,9 @@ const Navbar = () => {
           </div>
           <div className="px-4 py-2 flex items-center gap-2 cursor-pointer hover:bg-gray-700">
             <FaSignOutAlt className="text-red-500" />
-            <button onClick={handleLogout}>Keluar</button>
+            <button onClick={handleLogout} className="cursor-pointer">
+              Keluar
+            </button>
           </div>
         </div>
       </div>
